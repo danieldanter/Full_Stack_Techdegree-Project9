@@ -30,7 +30,8 @@ router.get('/users', authenticateUser, asyncHandler(async (req, res) => {
 router.post('/users', asyncHandler(async (req, res) => {
   try {
     await User.create(req.body);
-    res.status(201).json({ "message": "Account successfully created!" });
+    res.setHeader("Location", '/');
+    res.status(201).json();  //{ "message": "Account successfully created!" }
   } catch (error) {
     console.log('ERROR: ', error.name);
 
@@ -46,8 +47,19 @@ router.post('/users', asyncHandler(async (req, res) => {
 // /api/courses GET works
 
 router.get('/courses',  asyncHandler(async (req, res) => {
-  let courses = await Course.findAll();
+  let courses = await Course.findAll({
+    include:[
+             {
+                 model: User, 
+              
+             }]
+});
+
+
   res.json(courses);
+
+
+  //res.json(courses);
 }));
 
 // /api/courses/:id GET works
@@ -56,8 +68,11 @@ router.get('/courses/:id', authenticateUser, asyncHandler(async (req, res)=>{
   //console.log()
   const course = await Course.findByPk(req.params.id);
 
+  
+
   if(course ){
       res.json(course );
+      res.json()
   } else {
       res.status(404).json({message: "course  not found."});
   }
@@ -94,7 +109,7 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async(req,res) => {
     course.id= req.body.id; 
     try {
       await course.save();  //maybe create and save 
-      res.status(201).json({ "message": "Course successfully updated!" });
+      res.status(204).json();
     } catch (error) {
       console.log('ERROR: ', error.name);
   

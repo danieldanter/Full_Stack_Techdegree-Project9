@@ -64,11 +64,9 @@ router.get('/courses',  asyncHandler(async (req, res) => {
 
 // /api/courses/:id GET works
 
-router.get('/courses/:id', authenticateUser, asyncHandler(async (req, res)=>{
+router.get('/courses/:id',  asyncHandler(async (req, res)=>{
   //console.log()
   const course = await Course.findByPk(req.params.id);
-
-  
 
   if(course ){
       res.json(course );

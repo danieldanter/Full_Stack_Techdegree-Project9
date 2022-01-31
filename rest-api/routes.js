@@ -59,18 +59,22 @@ router.get('/courses',  asyncHandler(async (req, res) => {
   res.json(courses);
 
 
-  //res.json(courses);
 }));
 
 // /api/courses/:id GET works
 
 router.get('/courses/:id',  asyncHandler(async (req, res)=>{
   //console.log()
-  const course = await Course.findByPk(req.params.id);
+  const course = await Course.findByPk(req.params.id, {
+    include:[
+             {
+                 model: User,             
+             }]
+});
 
   if(course ){
-      res.json(course );
-      res.json()
+      res.json(course);
+      
   } else {
       res.status(404).json({message: "course  not found."});
   }
